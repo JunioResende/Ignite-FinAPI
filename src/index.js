@@ -53,6 +53,23 @@ app.get('/statement/', verifyIfExistsAccountCPF, (request, response) => {
   return response.json(customer.statement);
 });
 
+app.post('/deposit', verifyIfExistsAccountCPF, (request, response) => {
+  const { description, amount } = request.body;
+
+  const { customer } = request;
+
+  const statementOperation = {
+    description,
+    amount,
+    created_at: new Date(),
+    type: 'credit',
+  };
+
+  customer.statement.push(statementOperation);
+
+  return response.status(201).send();
+});
+
 app.listen(3333, () => {
   console.log('🚀Server started on port 3333!...');
 });
